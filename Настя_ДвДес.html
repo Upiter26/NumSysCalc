@@ -1,0 +1,10 @@
+<html>
+<body bgcolor=#bcd6fb>
+<input type="text" id="bin2dec" placeholder="Введите 0 и 1" style="padding:6px; font-size:14px;">
+<button onclick="(() => {
+  const v = document.getElementById('bin2dec').value.trim();
+  if (/^[01]+$/.test(v)) alert('Десятичное: ' + parseInt(v, 2));
+  else alert('Ошибка: только 0 и 1!');
+})()">Перевести</button>
+</body>
+</html>

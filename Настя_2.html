@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конвертеры</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #d6e7ff; /* ← вот он, твой цвет! */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 500px;
+      padding: 25px;
+    }
+
+    .converter-group {
+      margin-bottom: 22px;
+    }
+
+    .converter-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .group-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #7f8c8d;
+      margin-bottom: 10px;
+      text-align: center;
+      position: relative;
+    }
+
+    .group-title::after {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 2px;
+      background: #3498db;
+      margin: 3px auto;
+      border-radius: 1px;
+    }
+
+    .link-item {
+      display: block;
+      padding: 13px 16px;
+      background: #f8fafc;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 8px;
+      transition: all 0.25s ease;
+      border: 1px solid #eaecef;
+      display: flex;
+      align-items: center;
+    }
+
+    .link-item:hover {
+      background: #e3f2fd;
+      border-color: #3498db;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+      color: #3498db;
+    }
+
+    .link-item i {
+      margin-right: 12px;
+      font-size: 17px;
+      width: 22px;
+      text-align: center;
+      color: #3498db;
+    }
+
+    .link-item:hover i {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="converter-group">
+      <div class="group-title">Двоичная ↔ Десятичная</div>
+      <a href="Настя_ДесДв.html" target="Блок 3" class="link-item">
+        <i class="fas fa-arrow-right"></i> Из десятичной в двоичную
+      </a>
+      <a href="Настя_ДвДесс.html" target="Блок 3" class="link-item">
+        <i class="fas fa-arrow-left"></i> Из двоичной в десятичную
+      </a>
+    </div>
+
+    <div class="converter-group">
+      <div class="group-title">Шестнадцатеричная ↔ Десятичная</div>
+      <a href="Настя_ДесШ.html" target="Блок 3" class="link-item">
+        <i class="fas fa-arrow-right"></i> Из десятичной в 16-ричную
+      </a>
+      <a href="ШДес.html" target="Блок 3" class="link-item">
+        <i class="fas fa-arrow-left"></i> Из 16-ричной в десятичную
+      </a>
+    </div>
+
+    <div class="converter-group">
+      <div class="group-title">8-ричная ↔ Десятичная</div>
+      <a href="ДесВось.html" target="Блок 3" class="link-item">
+        <i class="fas fa-arrow-right"></i> Из десятичной в 8-ричную
+      </a>
+      <a href="ВосьДес.html" target="Блок 3" class="link-item">
+        <i class="fas fa-arrow-left"></i> Из 8-ричной в десятичную
+      </a>
+    </div>
+
+  </div>
+
+</body>
+</html>

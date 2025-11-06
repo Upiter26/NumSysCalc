@@ -1,0 +1,75 @@
+<html>
+<body bgcolor=#d6e7ff>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Десятичный → Двоичный</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+    }
+    input {
+      padding: 8px;
+      font-size: 16px;
+      width: 250px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+    #result {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <h2>Перевод из десятичной в двоичную систему</h2>
+  <input type="text" id="decimalInput" placeholder="Например: 42" maxlength="20">
+  <button onclick="convert()">Перевести</button>
+
+  <div id="result"></div>
+
+  <script>
+    function convert() {
+      const input = document.getElementById('decimalInput').value.trim();
+      const resultDiv = document.getElementById('result');
+
+      resultDiv.textContent = '';
+
+      if (input === '') {
+        resultDiv.textContent = 'Введите целое неотрицательное число.';
+        resultDiv.style.color = 'red';
+        return;
+      }
+
+      // Разрешаем только цифры (можно использовать Number и проверку)
+      const num = Number(input);
+
+      // Проверка: число ли, целое ли, неотрицательное ли
+      if (isNaN(num) || !Number.isInteger(num) || num < 0) {
+        resultDiv.textContent = 'Ошибка: введите целое число ≥ 0.';
+        resultDiv.style.color = 'red';
+        return;
+      }
+
+      // Перевод в двоичную (без "0b" — просто строка)
+      const binary = num.toString(2);
+      resultDiv.textContent = `Двоичное число: ${binary}`;
+      resultDiv.style.color = 'green';
+    }
+
+    document.getElementById('decimalInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        convert();
+      }
+    });
+  </script>
+</body>
+</html>
