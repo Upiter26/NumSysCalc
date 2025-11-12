@@ -1,46 +1,65 @@
-﻿<html>
+﻿<!DOCTYPE html>
+<html>
 <head>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-      background-color: #9bc9ff;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --bg: #9bc9ff; --text: #1a6dad; }
+    .dark-theme { --bg: #192841; --text: #e0e0e0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
       font-family: Arial, sans-serif;
-      overflow: hidden;
+      height: 100%;
+      position: relative;
+      transition: background 0.3s;
     }
-
     .header {
       display: flex;
       align-items: center;
       gap: 15px;
       padding: 15px 20px;
-      background: none;
-      box-shadow: none;
+      height: 100%;
     }
-
-    .header img {
-      width: 80px;
-      height: 80px;
-    }
-
-    .header span {
-      font-size: 28px;
-      color: #1a6dad;
+    .theme-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: #1a6dad;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
       font-weight: bold;
     }
+    .dark-theme .theme-btn { background: #4a90e2; }
   </style>
 </head>
 <body>
-
+  <button class="theme-btn" onclick="toggleTheme()">🌓</button>
   <div class="header">
-    <img src="icon.png" alt="Калькулятор">
-    <span>Калькулятор систем счисления</span>
+    <img src="icon.png" alt="Калькулятор" width="80" height="80">
+    <span style="font-size:28px;font-weight:bold;">Калькулятор систем счисления</span>
   </div>
 
+  <script>
+    function toggleTheme() {
+      const isDark = !document.body.classList.contains('dark-theme');
+      document.body.classList.toggle('dark-theme', isDark);
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+      // Сообщаем всем фреймам о смене темы
+      const frames = window.frames || [];
+      for (let i = 0; i < frames.length; i++) {
+        try {
+          frames[i].postMessage({ type: 'UPDATE_THEME', mode: isDark ? 'dark' : 'light' }, '*');
+        } catch (e) {}
+      }
+    }
+
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+    }
+  </script>
 </body>
 </html>
