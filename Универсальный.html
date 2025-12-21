@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Перевод систем счисления</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Светлая тема */
+    :root {
+      --bg: #d6e7ff;
+      --container-bg: white;
+      --text: #2c3e50;
+      --input-bg: white;
+      --input-border: #ccc;
+      --btn-bg: #3498db;
+      --btn-text: white;
+      --error: #e74c3c;
+      --success: #27ae60;
+      --shadow: rgba(0, 0, 0, 0.15);
+    }
+
+    /* Тёмная тема */
+    .dark-theme {
+      --bg: #203354;
+      --container-bg: #23395d;
+      --text: #e0e0e0;
+      --input-bg: #192841;
+      --input-border: #444;
+      --btn-bg: #3c5073;
+      --btn-text: white;
+      --error: #ff6b6b;
+      --success: #6bff88;
+      --shadow: rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: var(--text);
+      transition: background-color 0.3s;
+    }
+
+    .container {
+      background: var(--container-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px var(--shadow);
+      width: 100%;
+      max-width: 500px;
+      padding: 30px;
+      border: 1px solid var(--input-border);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: var(--text);
+      font-size: 22px;
+    }
+
+    .converter-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    input, select {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text);
+    }
+
+    input {
+      flex: 2;
+    }
+
+    select {
+      flex: 1;
+      text-align: center;
+    }
+
+    .arrow {
+      font-weight: bold;
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      min-height: 24px;
+    }
+
+    .error { color: var(--error); }
+    .success { color: var(--success); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Перевод систем счисления</h2>
+    
+    <div class="converter-row">
+      <input type="text" id="numberInput" placeholder="Число (например: 1A)">
+      <div class="arrow">из</div>
+      <select id="fromBase">
+        <option value="2">2</option>
+        <option value="8">8</option>
+        <option value="10" selected>10</option>
+        <option value="16">16</option>
+      </select>
+      <div class="arrow">в</div>
+      <select id="toBase">
+        <option value="2">2</option>
+        <option value="8">8</option>
+        <option value="10">10</option>
+        <option value="16" selected>16</option>
+      </select>
+    </div>
+
+    <button onclick="convert()">Перевести</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function convert() {
+      const numberStr = document.getElementById('numberInput').value.trim().toUpperCase();
+      const fromBase = parseInt(document.getElementById('fromBase').value);
+      const toBase = parseInt(document.getElementById('toBase').value);
+      const resultDiv = document.getElementById('result');
+
+      resultDiv.textContent = '';
+
+      if (!numberStr) {
+        resultDiv.textContent = 'Введите число';
+        resultDiv.className = 'error';
+        return;
+      }
+
+      // Проверка символов
+      const validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      for (let char of numberStr) {
+        if (validChars.indexOf(char) === -1 || validChars.indexOf(char) >= fromBase) {
+          resultDiv.textContent = `Символ "${char}" недопустим в системе ${fromBase}`;
+          resultDiv.className = 'error';
+          return;
+        }
+      }
+
+      try {
+        const decimal = parseInt(numberStr, fromBase);
+        if (isNaN(decimal)) throw new Error();
+
+        const result = decimal.toString(toBase).toUpperCase();
+        resultDiv.textContent = `${numberStr} (${fromBase}) = ${result} (${toBase})`;
+        resultDiv.className = 'success';
+      } catch (e) {
+        resultDiv.textContent = 'Ошибка при переводе';
+        resultDiv.className = 'error';
+      }
+    }
+
+    // Поддержка темы
+    function applyTheme() {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+    }
+
+    applyTheme();
+    window.addEventListener('storage', applyTheme);
+  </script>
+
+</body>
+</html>

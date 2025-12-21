@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Инструкция</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Светлая тема */
+    body {
+      background-color: #d6e7ff;
+      color: #2c3e50;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 40px 20px;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Тёмная тема */
+    body.dark-theme {
+      background-color: #203354;
+      color: #e0e0e0;
+    }
+
+    .instruction {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="instruction">
+    Выберите нужный вам раздел для выполнения перевода
+  </div>
+
+  <script>
+    // Применяем тему при загрузке
+    function applyTheme() {
+      const isDark = (localStorage.getItem('theme') === 'dark');
+      if (isDark) {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+    }
+
+    applyTheme();
+  </script>
+</body>
+</html>

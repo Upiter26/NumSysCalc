@@ -24,7 +24,7 @@
       position: absolute;
       top: 15px;
       right: 20px;
-      background: #4a90e2; /* светлая тема */
+      background: #1a6dad; /* светлая тема */
       color: white;
       border: none;
       padding: 6px 12px;
@@ -33,7 +33,7 @@
       font-weight: bold;
     }
     .dark-theme .theme-btn {
-      background: #1a6dad; /* тёмная тема */
+      background: #4a90e2; /* тёмная тема */
     }
   </style>
 </head>
@@ -70,14 +70,10 @@
       }
     }
 
-    // ✅ ГЛАВНОЕ: применяем тему ПРИ ЗАГРУЗКЕ
-    const savedTheme = localStorage.getItem('theme');
-    const isDark = (savedTheme === 'dark');
-    
+    const isDark = (localStorage.getItem('theme') === 'dark');
     if (isDark) {
       document.body.classList.add('dark-theme');
     }
-    
     updateIcon(isDark);
   </script>
 </body>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IEEE 754(с плавающей точкой)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Светлая тема */
+    :root {
+      --bg: #d6e7ff;
+      --container-bg: white;
+      --text: #2c3e50;
+      --input-bg: white;
+      --input-border: #ccc;
+      --btn-bg: #3498db;
+      --btn-text: white;
+      --error: #e74c3c;
+      --success: #27ae60;
+      --shadow: rgba(0, 0, 0, 0.15);
+    }
+
+    /* Тёмная тема */
+    .dark-theme {
+      --bg: #203354;
+      --container-bg: #23395d;
+      --text: #e0e0e0;
+      --input-bg: #192841;
+      --input-border: #444;
+      --btn-bg: #3c5073;
+      --btn-text: white;
+      --error: #ff6b6b;
+      --success: #6bff88;
+      --shadow: rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: var(--text);
+      transition: background-color 0.3s;
+    }
+
+    .container {
+      background: var(--container-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px var(--shadow);
+      width: 100%;
+      max-width: 500px;
+      padding: 30px;
+      border: 1px solid var(--input-border);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: var(--text);
+      font-size: 22px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text);
+    }
+
+    ::placeholder {
+      color: var(--text);
+      opacity: 0.6;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      min-height: 24px;
+    }
+
+    .error { color: var(--error); }
+    .success { color: var(--success); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>IEEE 754 в десятичную</h2>
+    <div class="input-group">
+      <input type="text" id="binaryInput" placeholder="Например: 101.01 или -11.1" maxlength="30">
+      <button onclick="convert()">Перевести</button>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function convert() {
+      const inputStr = document.getElementById('binaryInput').value.trim();
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = '';
+
+      if (inputStr === '') {
+        resultDiv.textContent = 'Введите двоичное число (0, 1, точка, например: 101.01).';
+        resultDiv.className = 'error';
+        return;
+      }
+
+      // Поддержка отрицательных чисел
+      const isNegative = inputStr.startsWith('-');
+      const cleanInput = inputStr.replace(/^-/, '');
+      const parts = cleanInput.split('.');
+      
+      if (parts.length > 2) {
+        resultDiv.textContent = 'Ошибка: только одна точка (например: 101.01).';
+        resultDiv.className = 'error';
+        return;
+      }
+
+      // Проверка: только 0, 1 и точка
+      if (!/^[01.]+$/.test(cleanInput)) {
+        resultDiv.textContent = 'Ошибка: только 0, 1 и точка (например: 101.01).';
+        resultDiv.className = 'error';
+        return;
+      }
+
+      const integerPartStr = parts[0] || '0';
+      const fractionalPartStr = parts[1] || '';
+
+      // Перевод целой части
+      let decimalInteger = 0;
+      for (let i = 0; i < integerPartStr.length; i++) {
+        if (integerPartStr[i] === '1') {
+          decimalInteger += Math.pow(2, integerPartStr.length - 1 - i);
+        }
+      }
+
+      // Перевод дробной части
+      let decimalFraction = 0;
+      for (let i = 0; i < fractionalPartStr.length; i++) {
+        if (fractionalPartStr[i] === '1') {
+          decimalFraction += Math.pow(2, -(i + 1));
+        }
+      }
+
+      let result = decimalInteger + decimalFraction;
+      if (isNegative) {
+        result = -result;
+      }
+
+      resultDiv.textContent = `Десятичное число: ${result}`;
+      resultDiv.className = 'success';
+    }
+
+    document.getElementById('binaryInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        convert();
+      }
+    });
+
+    // Поддержка темы
+    function applyTheme() {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+    }
+
+    applyTheme();
+    window.addEventListener('storage', applyTheme);
+  </script>
+
+</body>
+</html>

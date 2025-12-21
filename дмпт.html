@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="32-bit IEEE 754">
+  <title>Десятичное → IEEE 754</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Светлая тема */
+    :root {
+      --bg: #d6e7ff;
+      --container-bg: white;
+      --text: #2c3e50;
+      --input-bg: white;
+      --input-border: #ccc;
+      --btn-bg: #3498db;
+      --btn-text: white;
+      --error: #e74c3c;
+      --success: #27ae60;
+      --shadow: rgba(0, 0, 0, 0.15);
+    }
+
+    /* Тёмная тема */
+    .dark-theme {
+      --bg: #203354;
+      --container-bg: #23395d;
+      --text: #e0e0e0;
+      --input-bg: #192841;
+      --input-border: #444;
+      --btn-bg: #3c5073;
+      --btn-text: white;
+      --error: #ff6b6b;
+      --success: #6bff88;
+      --shadow: rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: var(--text);
+      transition: background-color 0.3s;
+    }
+
+    .container {
+      background: var(--container-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px var(--shadow);
+      width: 100%;
+      max-width: 500px;
+      padding: 30px;
+      border: 1px solid var(--input-border);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: var(--text);
+      font-size: 22px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text);
+    }
+
+    ::placeholder {
+      color: var(--text);
+      opacity: 0.6;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      min-height: 24px;
+      line-height: 1.4;
+    }
+
+    .error { color: var(--error); }
+    .success { color: var(--success); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Десятичное → IEEE 754 (32-bit)</h2>
+    <div class="input-group">
+      <input type="text" id="decimalInput" placeholder="Например: 5.25 или -3.75" maxlength="30">
+      <button onclick="convert()">Перевести</button>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function convert() {
+      const inputStr = document.getElementById('decimalInput').value.trim();
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+
+      if (inputStr === '') {
+        resultDiv.textContent = 'Введите число (например: 5.25).';
+        resultDiv.className = 'error';
+        return;
+      }
+
+      const num = parseFloat(inputStr);
+      if (isNaN(num)) {
+        resultDiv.textContent = 'Ошибка: введите корректное число.';
+        resultDiv.className = 'error';
+        return;
+      }
+
+      // Обработка специальных значений
+      if (!isFinite(num)) {
+        resultDiv.textContent = 'Ошибка: число слишком большое или не конечное.';
+        resultDiv.className = 'error';
+        return;
+      }
+
+      // Получаем 32-битное представление
+      const view = new DataView(new ArrayBuffer(4));
+      view.setFloat32(0, num, false); // big-endian
+      const bits = view.getUint32(0, false);
+
+      // Форматируем как 32-битную строку
+      const binaryStr = bits.toString(2).padStart(32, '0');
+
+      // Разбиваем на части
+      const sign = binaryStr[0];
+      const exponent = binaryStr.substring(1, 9);
+      const mantissa = binaryStr.substring(9);
+
+      resultDiv.innerHTML = `
+        <div>Число: ${num}</div>
+        <div>32-бит (IEEE 754): <b>${binaryStr}</b></div>
+        <div>Знак: ${sign} | Экспонента: ${exponent} | Мантисса: ${mantissa}</div>
+      `;
+      resultDiv.className = 'success';
+    }
+
+    document.getElementById('decimalInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        convert();
+      }
+    });
+
+    // Поддержка темы
+    function applyTheme() {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+    }
+
+    applyTheme();
+    window.addEventListener('storage', applyTheme);
+  </script>
+
+</body>
+</html>
